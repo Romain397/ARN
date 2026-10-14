@@ -12,7 +12,7 @@ La démarche NetOps associe configurations versionnées, automatisation reproduc
 
 ## État réel du projet
 
-Les répertoires sont créés et la documentation initiale est préparée. Git est disponible sur le portable ; le raccordement à GitHub fait partie de cette phase de préparation.
+Les répertoires et la documentation initiale sont versionnés. Le dépôt est relié à GitHub et la publication sur `main` a été vérifiée. La préparation du dépôt est terminée ; la conception du laboratoire se poursuit.
 
 **Aucun service réseau du laboratoire n'est encore déclaré fonctionnel.** Le SSD dédié reste à installer et EVE-NG n'est pas installé. Docker Desktop et WSL2 sont installés sur le portable, mais le dernier test n'accédait pas au daemon Docker et `docker-desktop` était arrêté : aucune stack Docker n'est validée.
 
@@ -88,7 +88,7 @@ Le portable reste le poste principal et n'hébergera pas le laboratoire EVE-NG f
 | Keycloak | Identités, rôles et authentification des services compatibles | Prévu |
 | WireGuard ou IPsec | Tunnel sécurisé entre sites | Prévu — choix à valider |
 | mwan3 | Gestion des chemins WAN et tests de bascule | Prévu |
-| Git / GitHub | Versionnement et documentation | En cours — préparation initiale |
+| Git / GitHub | Versionnement et documentation | Fonctionnel — publication initiale vérifiée |
 | OPNsense | Démonstration complémentaire de pare-feu | Optionnel — non requis |
 
 Prometheus et Grafana constituent la solution de supervision retenue à ce stade. Les versions, licences, intégrations et ressources nécessaires seront vérifiées avant chaque déploiement ; cette liste n'implique pas une compatibilité déjà validée.
@@ -128,7 +128,7 @@ Le `.gitignore` est une protection complémentaire : il ne détecte pas un secre
 
 Chaque phase sera validée avec des tests et une documentation avant de déclarer ses services fonctionnels.
 
-- [ ] **Phase 0 — Préparation du dépôt** : README, exclusions, structure, commit et publication GitHub vérifiée.
+- [x] **Phase 0 — Préparation du dépôt** : README, exclusions, structure, commit et publication GitHub vérifiée.
 - [ ] **Phase 1 — Installation EVE-NG** : SSD dédié, installation et accès LAN, préservation des disques Windows.
 - [ ] **Phase 2 — Premier réseau OpenWrt** : import autorisé des images, interfaces, DHCP et connectivité.
 - [ ] **Phase 3 — Segmentation / VLAN** : plan d'adressage, routage et politiques entre segments.
@@ -141,7 +141,7 @@ Chaque phase sera validée avec des tests et une documentation avant de déclare
 - [ ] **Phase 10 — Sécurisation et tests** : audit des accès, filtrage et scénarios de panne.
 - [ ] **Phase 11 — Documentation / soutenance** : procédures reproductibles, résultats et démonstrations.
 
-La phase 0 reste ouverte jusqu'à vérification de la publication sur GitHub.
+La validation de la phase 0 concerne uniquement le dépôt ; les services du laboratoire restent à déployer et à tester.
 
 ## Critères de validation
 
