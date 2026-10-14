@@ -2,21 +2,11 @@
 
 Conception, automatisation, sécurisation et supervision d'une infrastructure réseau virtualisée.
 
-🚧 **Projet en cours de réalisation — phase de conception et de préparation du dépôt.**
-
 ## Présentation
 
 Projet individuel réalisé pendant la formation **Administrateur Réseau NetOps (ARN)** : concevoir une infrastructure pour une entreprise fictive comprenant deux sites, plusieurs segments réseau et un petit datacenter virtuel.
 
 La démarche NetOps associe configurations versionnées, automatisation reproductible, supervision et documentation. Le laboratoire doit rester réalisable avec du matériel personnel et démontrable en soutenance, en privilégiant les outils gratuits et ouverts lorsque possible.
-
-## État réel du projet
-
-Les répertoires et la documentation initiale sont versionnés. Le dépôt est relié à GitHub et la publication sur `main` a été vérifiée. La préparation du dépôt est terminée ; la conception du laboratoire se poursuit.
-
-**Aucun service réseau du laboratoire n'est encore déclaré fonctionnel.** Le SSD dédié reste à installer et EVE-NG n'est pas installé. Docker Desktop et WSL2 sont installés sur le portable, mais le dernier test n'accédait pas au daemon Docker et `docker-desktop` était arrêté : aucune stack Docker n'est validée.
-
-Les statuts utilisés sont : **Prévu** (à mettre en place), **En cours** (travail commencé, validation incomplète) et **Fonctionnel** (testé avec preuve documentée). Le dépôt évoluera au fil de la formation.
 
 ## Objectifs
 
@@ -30,7 +20,7 @@ Les statuts utilisés sont : **Prévu** (à mettre en place), **En cours** (trav
 
 ## Architecture cible
 
-Ce schéma décrit l'architecture **prévue**, pas un déploiement existant. Les liens représentent des relations logiques ; le plan détaillé des flux et des adresses reste à définir.
+Ce schéma présente l'architecture cible du laboratoire. Les liens représentent des relations logiques ; les plans détaillés d'adressage et de flux relèvent de la documentation technique dans `docs/`.
 
 ```mermaid
 flowchart TB
@@ -59,39 +49,39 @@ flowchart TB
     ANSIBLE -.->|"Administration via LAN / VPN"| LAB
 ```
 
-L'hébergement précis des services auxiliaires sera validé selon les ressources et les besoins de chaque scénario. ONOS pilotera le mini-lab OVS, distinct des équipements OpenWrt principaux.
+L'hébergement des services auxiliaires dépend des ressources et des besoins de chaque scénario. Ansible s'exécute depuis le portable via WSL2 pour administrer le laboratoire. ONOS assure le contrôle du mini-lab OVS, distinct des équipements OpenWrt principaux.
 
 ## Répartition matérielle
 
-| Machine | Ressources | Rôle prévu |
+| Machine | Ressources | Rôle |
 |---|---|---|
 | PC tour à domicile | AMD Ryzen 9 5900, 32 Go DDR4, ASUS Prime B450M-A II | Serveur EVE-NG installé directement sur un SSD SATA Samsung 870 EVO dédié |
 | PC portable Windows 11 | Intel Core i7-13650HX, 32 Go DDR5 | Développement, Git/GitHub, Ansible via WSL2, SSH, interfaces Web et soutenance |
 
-Les disques Windows existants de la tour doivent être préservés. Le disque de démarrage sera choisi entre Windows et EVE-NG ; le laboratoire sera disponible lorsque la tour démarrera sur EVE-NG. Les GPU ne constituent pas une ressource nécessaire à la virtualisation réseau prévue.
+Les disques Windows existants de la tour doivent être préservés. Le choix du disque de démarrage permet d'utiliser Windows ou EVE-NG ; l'accès au laboratoire nécessite le démarrage de la tour sur EVE-NG. Les GPU ne constituent pas une ressource nécessaire à la virtualisation réseau.
 
-Le portable reste le poste principal et n'hébergera pas le laboratoire EVE-NG final. Depuis l'école, l'administration passera par un VPN vers le réseau domestique. **EVE-NG ne sera jamais directement exposé sur Internet.**
+Le portable constitue le poste d'administration et de développement ; le laboratoire EVE-NG est destiné à la tour. Depuis l'école, les accès d'administration passent par un VPN vers le réseau domestique. **EVE-NG ne doit jamais être directement exposé sur Internet.**
 
 ## Stack technique
 
-| Technologie | Rôle | Statut |
-|---|---|---|
-| EVE-NG | Plateforme de laboratoire réseau sur la tour | Prévu |
-| OpenWrt | Routeurs virtuels, VLAN, DHCP, routage et filtrage | Prévu |
-| OpenWISP | Gestion centralisée, modèles de configuration et API | Prévu |
-| Ansible | Automatisation, sauvegardes et reproductibilité | Prévu |
-| Prometheus | Collecte et stockage des métriques | Prévu |
-| Grafana | Tableaux de bord et visualisation | Prévu |
-| ONOS | Contrôleur du mini-environnement SDN | Prévu |
-| Open vSwitch | Plan de données SDN piloté via OpenFlow | Prévu |
-| HashiCorp Vault | Stockage et contrôle d'accès aux secrets | Prévu |
-| Keycloak | Identités, rôles et authentification des services compatibles | Prévu |
-| WireGuard ou IPsec | Tunnel sécurisé entre sites | Prévu — choix à valider |
-| mwan3 | Gestion des chemins WAN et tests de bascule | Prévu |
-| Git / GitHub | Versionnement et documentation | Fonctionnel — publication initiale vérifiée |
-| OPNsense | Démonstration complémentaire de pare-feu | Optionnel — non requis |
+| Technologie | Rôle |
+|---|---|
+| EVE-NG | Plateforme de laboratoire réseau en bare metal sur la tour |
+| OpenWrt | Routeurs virtuels, VLAN, DHCP, routage et filtrage |
+| OpenWISP | Gestion centralisée, modèles de configuration et API |
+| Ansible | Automatisation, sauvegardes et reproductibilité |
+| Prometheus | Collecte et stockage des métriques |
+| Grafana | Tableaux de bord et visualisation |
+| ONOS | Contrôleur du mini-environnement SDN |
+| Open vSwitch | Plan de données SDN piloté via OpenFlow |
+| HashiCorp Vault | Gestion et contrôle d'accès aux secrets |
+| Keycloak | Identités, rôles et authentification des services compatibles |
+| WireGuard / IPsec | Tunnel sécurisé inter-sites |
+| mwan3 | Gestion de plusieurs chemins WAN et bascule |
+| Git / GitHub | Versionnement, documentation et traçabilité |
+| OPNsense | Extension facultative pour la sécurité locale, sans dépendance pour le reste du laboratoire |
 
-Prometheus et Grafana constituent la solution de supervision retenue à ce stade. Les versions, licences, intégrations et ressources nécessaires seront vérifiées avant chaque déploiement ; cette liste n'implique pas une compatibilité déjà validée.
+Prometheus et Grafana constituent la solution de supervision retenue. Chaque déploiement nécessite la vérification des versions, licences, intégrations et ressources ; la présence d'une technologie dans cette architecture cible ne constitue pas une preuve de validation.
 
 ## Organisation du dépôt
 
@@ -110,13 +100,13 @@ ARN/
 └── README.md
 ```
 
-Les fichiers `.gitkeep` permettent de versionner les répertoires actuellement vides. Les configurations utiles et dépourvues de secrets ont vocation à être conservées dans Git. Aucun fichier de VM ou image d'équipement ne doit être ajouté.
+Les fichiers `.gitkeep` permettent de versionner les répertoires vides. Les configurations utiles et dépourvues de secrets ont vocation à être conservées dans Git. Aucun fichier de VM ou image d'équipement ne doit être ajouté.
 
 ## Sécurité et accès
 
 - **Aucun secret dans Git** : mots de passe, tokens GitHub/API, clés privées et données d'initialisation ou de déverrouillage de Vault restent hors du dépôt.
 - Privilégier les clés SSH et limiter les droits aux besoins de chaque rôle.
-- Prévoir Vault pour fournir les secrets à l'automatisation au moment nécessaire ; ne pas les inscrire dans les playbooks ou inventaires.
+- Utiliser Vault pour fournir les secrets à l'automatisation au moment nécessaire ; ne pas les inscrire dans les playbooks ou inventaires.
 - Exclure `.env` et ses variantes ; un `.env.example` peut être versionné uniquement avec des valeurs fictives.
 - Exclure les données locales de Vault, les états Terraform, les fichiers de clés et les images de virtualisation via `.gitignore`.
 - Accéder à distance uniquement via VPN ; ne pas publier l'interface EVE-NG sur Internet.
@@ -124,28 +114,9 @@ Les fichiers `.gitkeep` permettent de versionner les répertoires actuellement v
 
 Le `.gitignore` est une protection complémentaire : il ne détecte pas un secret placé dans un fichier de configuration autorisé et n'exclut pas automatiquement un fichier déjà suivi. Chaque commit doit donc faire l'objet d'une vérification du contenu ajouté.
 
-## Roadmap
-
-Chaque phase sera validée avec des tests et une documentation avant de déclarer ses services fonctionnels.
-
-- [x] **Phase 0 — Préparation du dépôt** : README, exclusions, structure, commit et publication GitHub vérifiée.
-- [ ] **Phase 1 — Installation EVE-NG** : SSD dédié, installation et accès LAN, préservation des disques Windows.
-- [ ] **Phase 2 — Premier réseau OpenWrt** : import autorisé des images, interfaces, DHCP et connectivité.
-- [ ] **Phase 3 — Segmentation / VLAN** : plan d'adressage, routage et politiques entre segments.
-- [ ] **Phase 4 — OpenWISP** : enregistrement des équipements et modèles de configuration.
-- [ ] **Phase 5 — Interconnexion multi-sites** : tunnel, chemins WAN simulés, mwan3 et bascule.
-- [ ] **Phase 6 — Ansible** : inventaires, playbooks, sauvegardes et preuve d'idempotence.
-- [ ] **Phase 7 — Prometheus / Grafana** : collecte, dashboards et alertes utiles.
-- [ ] **Phase 8 — ONOS / OVS** : connexion OpenFlow et démonstration du contrôle centralisé.
-- [ ] **Phase 9 — Vault / Keycloak** : secrets, rôles et intégrations compatibles.
-- [ ] **Phase 10 — Sécurisation et tests** : audit des accès, filtrage et scénarios de panne.
-- [ ] **Phase 11 — Documentation / soutenance** : procédures reproductibles, résultats et démonstrations.
-
-La validation de la phase 0 concerne uniquement le dépôt ; les services du laboratoire restent à déployer et à tester.
-
 ## Critères de validation
 
-Ces critères sont des objectifs ; aucun résultat n'est encore acquis. Les preuves seront conservées dans `docs/` sous forme de procédures, résultats assainis et captures utiles.
+Ces critères définissent les résultats attendus pour les démonstrations. Leur validation exige des preuves documentées dans `docs/` : procédures, résultats assainis et captures utiles.
 
 | Domaine | Résultat attendu |
 |---|---|
@@ -161,14 +132,14 @@ Ces critères sont des objectifs ; aucun résultat n'est encore acquis. Les preu
 
 ## Limites du laboratoire
 
-Le serveur possède **32 Go de RAM** : toutes les machines et tous les services ne seront pas exécutés simultanément. Les démonstrations seront organisées par blocs : OpenWrt/OpenWISP, WAN, Ansible, supervision, ONOS/OVS, puis Vault/Keycloak. Les allocations et la consommation réelle seront mesurées avant d'étendre le lab.
+Le serveur possède **32 Go de RAM** : les composants peuvent être exécutés séparément pour maîtriser la consommation mémoire. Les démonstrations s'organisent par blocs : OpenWrt/OpenWISP, WAN, Ansible, supervision, ONOS/OVS et Vault/Keycloak. Le dimensionnement repose sur les allocations et la consommation mesurée pour chaque scénario.
 
-OpenWISP illustre une gestion centralisée open source et une approche de cloud privé ; il ne sera pas présenté comme un équivalent exact des offres SaaS constructeur Mist ou Meraki. Le WAN simulé démontre des mécanismes utilisés en SD-WAN, sans constituer une solution constructeur complète.
+OpenWISP illustre une gestion centralisée open source et une approche de cloud privé ; il ne constitue pas un équivalent exact des offres SaaS constructeur Mist ou Meraki. Le WAN simulé démontre des mécanismes utilisés en SD-WAN, sans constituer une solution constructeur complète.
 
-Il s'agit d'un **environnement pédagogique, pas d'une architecture de production**. La disponibilité dépend du serveur unique et de son démarrage sur EVE-NG. Performances, redondance, montée en charge et exploitation continue ne sont pas garanties. La soutenance distinguera ce qui est testé, ce qui reste prévu et ce qui nécessiterait une conception différente en production.
+Il s'agit d'un **environnement pédagogique, pas d'une architecture de production**. La disponibilité dépend du serveur unique et de son démarrage sur EVE-NG. Performances, redondance, montée en charge et exploitation continue ne sont pas garanties. La soutenance s'appuie sur des preuves de test et explicite les adaptations nécessaires à une exploitation en production.
 
 ## Compétences et thèmes étudiés
 
 Réseau local, VLAN et routage ; virtualisation réseau ; WAN sécurisé ; gestion centralisée ; automatisation et Ansible ; supervision ; SDN ; sécurité des accès ; IAM ; gestion des secrets ; documentation et reproductibilité.
 
-Le projet ne revendique pas une couverture intégrale du référentiel ARN. Pour chaque thème, le dossier de formation explicitera le choix technique, le fonctionnement, les preuves de validation et les limites du laboratoire.
+Le projet ne revendique pas une couverture intégrale du référentiel ARN. Pour chaque thème, le dossier de formation explicite le choix technique, le fonctionnement, les preuves de validation et les limites du laboratoire.
