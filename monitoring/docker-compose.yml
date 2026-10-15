@@ -1,17 +1,62 @@
 services:
-
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:latest@sha256:efd719c99d83b060d9daefdcf00360461adf279f45ef5391f8d111892118753e
     container_name: prometheus
+    restart: unless-stopped
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alerts.yml:/etc/prometheus/alerts.yml:ro
+      - prometheus_data:/prometheus
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:latest@sha256:dbbc38ea21103cefb50396340cd88afec779c7e070b0a7bf5a75b4ce46651d3f
     container_name: grafana
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/etc/grafana/dashboards:ro
     depends_on:
       - prometheus
+
+  blackbox-exporter:
+    image: quay.io/prometheus/blackbox-exporter:v0.29.0
+    container_name: blackbox-exporter
+    restart: unless-stopped
+    command:
+      - "--config.file=/config/blackbox.yml"
+    ports:
+      - "127.0.0.1:9115:9115"
+    volumes:
+      - ./blackbox.yml:/config/blackbox.yml:ro
+
+  alertmanager:
+    image: quay.io/prometheus/alertmanager:v0.34.1
+    container_name: alertmanager
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    ports:
+      - "127.0.0.1:9093:9093"
+    volumes:
+      - ./alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - ./secrets/discord-webhook-url.txt:/run/secrets/discord_webhook_url:ro
+      - alertmanager_data:/alertmanager
+
+volumes:
+  grafana_data:
+    external: true
+    name: arn_grafana_data
+
+  prometheus_data:
+    external: true
+    name: arn_prometheus_data
+
+  alertmanager_data:
+    external: true
+    name: arn_alertmanager_data

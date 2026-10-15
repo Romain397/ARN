@@ -1,0 +1,17 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  receiver: arn-discord
+  group_by:
+    - alertname
+    - instance
+  group_wait: 10s
+  group_interval: 30s
+  repeat_interval: 1h
+
+receivers:
+  - name: arn-discord
+    discord_configs:
+      - webhook_url_file: /run/secrets/discord_webhook_url
+        send_resolved: true
