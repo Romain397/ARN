@@ -8,6 +8,17 @@ Projet individuel réalisé pendant la formation **Administrateur Réseau NetOps
 
 La démarche NetOps associe configurations versionnées, automatisation reproductible, supervision et documentation. Le laboratoire doit rester réalisable avec du matériel personnel et démontrable en soutenance, en privilégiant les outils gratuits et ouverts lorsque possible.
 
+## Suivi technique — point du 1er novembre 2026
+
+Le dual-boot Windows 11 / Ubuntu Server est **VALIDÉ**, avec Secure Boot actif et une configuration de démarrage figée. **EVE-NG Community 6.2.0-4 est NON INSTALLÉ** : les paquets et une copie signée du noyau sont **PRÉPARÉS**, mais ce noyau n'est ni installé ni testé au démarrage. Ces états proviennent du compte rendu fourni pour ce point d'avancement ; aucune nouvelle vérification du serveur n'a été exécutée pendant la mise à jour documentaire.
+
+- [État de l'infrastructure et composants validés](docs/ARN-STATUS.md)
+- [Préparation de l'installation EVE-NG et risques Secure Boot](docs/ARN-EVE-NG-INSTALLATION.md)
+- [Checklist de reprise du projet](docs/ARN-NEXT-STEPS.md)
+- [Historique daté du projet](CHANGELOG.md)
+
+Ces documents constituent la référence de suivi de l'infrastructure. Les sections d'architecture ci-dessous décrivent la cible du projet ; elles ne prouvent pas son déploiement.
+
 ## Objectifs
 
 - **SD-LAN et segmentation** : VLAN, routage, DHCP et règles entre segments.
@@ -55,10 +66,10 @@ L'hébergement des services auxiliaires dépend des ressources et des besoins de
 
 | Machine | Ressources | Rôle |
 |---|---|---|
-| PC tour à domicile | AMD Ryzen 9 5900, 32 Go DDR4, ASUS Prime B450M-A II | Serveur EVE-NG installé directement sur un SSD SATA Samsung 870 EVO dédié |
+| PC tour à domicile | AMD Ryzen 9 5900X, 12 cœurs / 24 threads, 32 Go de RAM, ASUS Prime B450M-A II | Ubuntu Server sur SSD SATA Samsung 870 EVO 1 To ; hébergement EVE-NG prévu, installation non réalisée |
 | PC portable Windows 11 | Intel Core i7-13650HX, 32 Go DDR5 | Développement, Git/GitHub, Ansible via WSL2, SSH, interfaces Web et soutenance |
 
-Les disques Windows existants de la tour doivent être préservés. Le choix du disque de démarrage permet d'utiliser Windows ou EVE-NG ; l'accès au laboratoire nécessite le démarrage de la tour sur EVE-NG. Les GPU ne constituent pas une ressource nécessaire à la virtualisation réseau.
+Les disques Windows existants de la tour doivent être préservés. Le menu rEFInd permet de choisir Windows 11 ou Ubuntu Server ; le futur laboratoire EVE-NG nécessitera le démarrage de la tour sur Ubuntu. Les GPU ne constituent pas une ressource nécessaire à la virtualisation réseau.
 
 Le portable constitue le poste d'administration et de développement ; le laboratoire EVE-NG est destiné à la tour. Depuis l'école, les accès d'administration passent par un VPN vers le réseau domestique. **EVE-NG ne doit jamais être directement exposé sur Internet.**
 
